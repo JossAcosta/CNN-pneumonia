@@ -27,11 +27,11 @@ A continuación, se muestra la visualización de dos ejemplos de radiografías d
 <div align="center">
   <div style="display: inline-block; text-align: center; padding: 10px;">
     <p>Radiografía de Tórax Normal:</p>
-    <img src="assets/chest_xray/val/NORMAL/NORMAL2-IM-1440-0001.jpeg" alt="Radiografía de Tórax Normal" width="400" height="300"/>
+    <img src="assets/images/NORMAL.jpeg" alt="Radiografía de Tórax Normal" width="400" height="300"/>
   </div>
   <div style="display: inline-block; text-align: center; padding: 10px;">
     <p>Radiografía de Tórax de Persona Infectada con Neumonía:</p>
-    <img src="assets/chest_xray/val/PNEUMONIA/person1954_bacteria_4886.jpeg" alt="Radiografía de Tórax Infectada" width="400" height="300"/>
+    <img src="assets/images/PNEUMONIA.jpeg" alt="Radiografía de Tórax Infectada" width="400" height="300"/>
   </div>
 </div>
 
@@ -74,11 +74,11 @@ import cv2
 
 Definimos las rutas a las carpetas de datos de entrenamiento, validación y prueba(train, val, test). Estas carpetas contienen imágenes de rayos X etiquetadas como "NORMAL" o "PNEUMONIA". Luego, creamos una función llamada load_data para cargar primeramente las imagenes de entrenamiento.
 
-En la siguiente grafica podemos observar la distribución de los datos de entrenamiento ![Distribución de Datos](train_distribution.png)
+En la siguiente grafica podemos observar la distribución de los datos de entrenamiento ![Distribución de Datos](assets/images/train_distribution.png)
 
-Visualizar la distribución de clases en el conjunto de validación ![Distribución de Datos](val_distribution.png)
+Visualizar la distribución de clases en el conjunto de validación ![Distribución de Datos](assets/images/val_distribution.png)
 
-Visualizar la distribución de clases en el conjunto de prueba ![Distribución de Datos](test_distribution.png)
+Visualizar la distribución de clases en el conjunto de prueba ![Distribución de Datos](assets/images/test_distribution.png)
 
 ## 3. Preparación de Datos
 
@@ -87,14 +87,6 @@ Una vez cargados los datos, se lleva a cabo una etapa crucial de preprocesamient
 ## 4. Aumento de Datos
 
 Para enriquecer y mejorar la capacidad de generalización de nuestro modelo, aplicamos técnicas de aumento de datos utilizando la biblioteca `ImageDataGenerator` de Keras. Este generador nos permite aplicar una serie de transformaciones a nuestras imágenes de entrenamiento, como rotaciones, zoom, cambios de tamaño, entre otras. Al ajustar el generador a los datos de entrenamiento con `datagen.fit(x_train)`, aseguramos que estas transformaciones se apliquen de manera coherente y efectiva durante el entrenamiento del modelo. Esta estrategia de aumento de datos es fundamental para mejorar la capacidad del modelo para reconocer patrones en los datos de manera más robusta.
-
-````markdown
-from keras.preprocessing.image import ImageDataGenerator
-
-# Configuración de aumentos de datos
-
-datagen = ImageDataGenerator( # ... configuración de aumentos de datos ...
-)
 
 # Ajustar el generador a los datos de entrenamiento
 
@@ -118,41 +110,13 @@ En esta etapa, creamos un modelo de red neuronal convolucional (CNN) utilizando 
 
 La definición detallada de estas capas se encuentra en el código. Además, en esta etapa, también cargamos y preprocesamos los datos de prueba que se utilizarán para evaluar el rendimiento del modelo. Esto nos permitirá medir la precisión y la pérdida del modelo en datos no vistos.
 
-```python
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
-
-model = Sequential()
-
-# Agregar capas de convolución y pooling
-# ... definición de capas de la CNN ...
-
-# Aplanar la salida y agregar capas densas
-# ... definición de capas densas ...
-
-# Cargar y preprocesar datos de prueba
-# ... código de carga y preprocesamiento de datos de prueba ...
-
-```
-````
-
 ## 6. Evaluación del Modelo
 
 En esta etapa, evaluamos el rendimiento de nuestro modelo utilizando datos de prueba. Esto nos proporciona información valiosa sobre la capacidad del modelo para detectar la neumonía en las imágenes de rayos X de tórax. Los pasos clave son los siguientes:
 
 1. **Evaluación del Modelo**: Utilizamos el conjunto de datos de prueba (que no ha sido visto previamente por el modelo) para calcular tanto la pérdida como la precisión del modelo. La pérdida nos indica cuán lejos están las predicciones del modelo de las etiquetas reales, mientras que la precisión nos dice qué tan bien el modelo acierta en sus predicciones.
 
-```python
-# Evaluar el modelo en el conjunto de datos de prueba
-loss, accuracy = model.evaluate(x_test, y_test, verbose=0)
-
-# Imprimir la pérdida y la precisión
-print("Pérdida en prueba:", loss)
-print("Precisión en prueba:", accuracy)
-
-```
-
-Visualizar la Perdida y Precisión del modelo de entrenamiento ![Entrenamiento de Datos Metricas](accuracy.png)
+Visualizar la Perdida y Precisión del modelo de entrenamiento ![Entrenamiento de Datos Metricas](assets/images/accuracy.png)
 
 # Evaluación del Modelo y Matriz de Confusión
 
@@ -174,7 +138,7 @@ Utilizamos el modelo entrenado para hacer predicciones en las imágenes de prueb
 
 Para una representación visual de la matriz de confusión, creamos un mapa de calor que muestra la relación entre las predicciones del modelo y las etiquetas verdaderas. Esto nos ayuda a identificar visualmente las predicciones correctas e incorrectas.
 
-![Matriz de Confusión](confusion_matrix.png)
+![Matriz de Confusión](assets/images/confusion_matrix.png)
 
 En el mapa de calor, las etiquetas "Normal" y "Neumonía" se encuentran en los ejes x e y, y los valores dentro de las celdas indican cuántas imágenes fueron clasificadas correctamente o incorrectamente.
 
