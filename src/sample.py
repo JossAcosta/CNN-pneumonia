@@ -1,7 +1,9 @@
 import os
+import pdb
 
+import cv2
 import numpy as np
-from .store import load_image, process_image, list_directory
+from .store import load_image, list_directory
 
 
 class Sample:
@@ -15,40 +17,40 @@ class Sample:
     def load(self, name: str = None):
         sample_name = name or self.sample_name
 
-        imgs, tags = self.load_normal_sample(sample_name=sample_name)
-        self.normal_images = imgs
-        self.normal_tags = tags
+        self.normal_images = self.load_normal_sample(sample_name=sample_name)
+        self.normal_tags = np.zeros(len(self.normal_images))
 
-        imgs, tags = self.load_pneumo_sample(sample_name=sample_name)
-        self.pneumo_images = imgs
-        self.pneumo_tags = tags
+        self.pneumo_images = self.load_pneumo_sample(sample_name=sample_name)
+        self.pneumo_tags = np.ones(len(self.pneumo_images))
 
     def load_normal_sample(self, sample_name: str = "test"):
-        images, tags = self.load_from_raw_images(
-            f"chest-xray/{sample_name}/normal"
+        return self.load_raw_images(
+            f"chest_xray/{sample_name}/NORMAL"
         )
-        return images, tags
 
     def load_pneumo_sample(self, sample_name: str = "test"):
-        images, tags = self.load_from_raw_images(
-            f"chest-xray/{sample_name}/pneumonia", training_tag=1
+        return self.load_raw_images(
+            f"chest_xray/{sample_name}/PNEUMONIA", training_tag=1
         )
-        return images, tags
 
-    def load_from_raw_images(self, sample_path: str, training_tag: int = 0):
+    def load_raw_images(self, sample_path: str, training_tag: int = 0):
         sample = list_directory(sample_path)
-        sample_count = len(sample)
-        tags = np.zeros(sample_count) if training_tag == 0 else np.ones(
-            sample_count)
         image_buffer = []
         for file_name in sample:
             image_path = os.path.join(sample_path, file_name)
             image = load_image(image_path)
-            image_buffer.append(process_image(image))
+            image_buffer.append(self.process_image(image))
 
-        images = np.array(image_buffer)
+        return np.array(image_buffer)
 
-        return images, tags
+    def process_image(self, raw_image, image_size=(128, 128)):
+        try:
+            image_data = cv2.cvtColor(raw_image, cv2.COLOR_BGR2GRAY)
+            image_data = cv2.resize(image_data, image_size)
+            return image_data / 255.0
+        except Exception as error:
+            pdb.post_mortem()
+            raise error
 
     def get_concatenated_images(self):
         sample = np.concatenate([self.normal_images, self.pneumo_images])

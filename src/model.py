@@ -8,9 +8,10 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 from .sample import Sample
 from .constants import ASSETS_DIR
 
+
 class PredictorModel:
     def __init__(self):
-        self._model = None
+        self._model = self._create_new_sequential_model()
         self._history = None
 
     def fit(self, *args, **kwargs):
@@ -40,7 +41,8 @@ class PredictorModel:
 
     def save(self, path):
         with open(ASSETS_DIR / path, "wb") as model_stream:
-            pickle.dump({"model": self._model, "history": self._history}, model_stream)
+            pickle.dump(
+                {"model": self._model, "history": self._history}, model_stream)
 
     def load(self, path):
         with open(ASSETS_DIR / path, "rb") as model_stream:
@@ -61,7 +63,8 @@ class PredictorModel:
 
     def _create_new_sequential_model(self):
         sequential_model = Sequential()
-        sequential_model.add(Conv2D(32, (3, 3), activation="relu", input_shape=(128, 128, 1)))
+        sequential_model.add(
+            Conv2D(32, (3, 3), activation="relu", input_shape=(128, 128, 1)))
         sequential_model.add(MaxPooling2D((2, 2)))
         sequential_model.add(Conv2D(64, (3, 3), activation="relu"))
         sequential_model.add(MaxPooling2D((2, 2)))

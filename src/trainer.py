@@ -9,7 +9,6 @@ from .plot import CountPlotter
 from .model import PredictorModel
 
 
-
 class Trainer:
     def __init__(self, sample: Sample):
         self.sample = sample
@@ -24,7 +23,7 @@ class Trainer:
         sample_count = len(images)
         batch_size = 32
         self.datagen.fit(images)
-        training = model.fit(
+        history = model.fit(
             self.datagen.flow(images, tags, batch_size=batch_size),
             steps_per_epoch=sample_count / batch_size,
             epochs=10,
@@ -32,7 +31,7 @@ class Trainer:
             verbose=1,
         )
 
-        model.set_training(training)
+        model.set_history(history)
 
     def create_data_generator(self):
         return ImageDataGenerator(
@@ -84,7 +83,8 @@ class Trainer:
         sample_count = len(sample_images)
         batch_size = 32
         history = self.model.fit(
-            self.datagen.flow(sample_images, sample_tags, batch_size=batch_size),
+            self.datagen.flow(sample_images, sample_tags,
+                              batch_size=batch_size),
             steps_per_epoch=sample_count / batch_size,
             epochs=10,
             validation_data=[self.checkpoint],

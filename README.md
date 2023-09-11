@@ -52,7 +52,26 @@ Para determinar si una persona está infectada con neumonía, un médico analiza
 
 Es importante destacar que la interpretación de las radiografías de tórax y el diagnóstico de la neumonía requieren experiencia médica y no deben realizarse únicamente en función de la observación de imágenes sin la consulta de un profesional de la salud.
 
-## 1. Carga de Bibliotecas
+## 1. PASOS PARA INSTALAR EL PROYECTO
+
+1. Crear y activar un ambiente virtual de python
+
+```shell
+pyenv virtualenv $NOMBRE_AMBIENTE
+pyenv activate $NOMBRE_AMBIENTE
+```
+
+2. Instalar los requerimientos
+
+```shell
+pip install -r requirements.txt
+```
+
+### para usar el modelo
+
+Despues de guardar el modelo entrenado, supongamos que el archivo se llama `model.pkl`,
+
+## 2. Carga de bibliotecas y Datos
 
 Para comenzar, importamos las bibliotecas necesarias para el proyecto:
 
@@ -70,8 +89,6 @@ import seaborn as sns
 import cv2
 ```
 
-## 2. Carga de Datos
-
 Definimos las rutas a las carpetas de datos de entrenamiento, validación y prueba(train, val, test). Estas carpetas contienen imágenes de rayos X etiquetadas como "NORMAL" o "PNEUMONIA". Luego, creamos una función llamada load_data para cargar primeramente las imagenes de entrenamiento.
 
 En la siguiente grafica podemos observar la distribución de los datos de entrenamiento ![Distribución de Datos](assets/images/train_distribution.png)
@@ -82,17 +99,11 @@ Visualizar la distribución de clases en el conjunto de prueba ![Distribución d
 
 ## 3. Preparación de Datos
 
-Una vez cargados los datos, se lleva a cabo una etapa crucial de preprocesamiento utilizando la función `preprocess_data`. Esta función se encarga de tareas como la conversión a escala de grises, el redimensionamiento y la normalización de las imágenes. Después de este proceso, concatenamos los conjuntos de datos etiquetados como "NORMAL" y "PNEUMONIA" para crear conjuntos de datos completos y listos para su uso en el entrenamiento y la validación.
+Una vez cargados los datos, se lleva a cabo una etapa crucial de preprocesamiento utilizando la función `load_from_raw_images`. Esta función se encarga de tareas como la conversión a escala de grises, el redimensionamiento y la normalización de las imágenes. Después de este proceso, concatenamos los conjuntos de datos etiquetados como "NORMAL" y "PNEUMONIA" para crear conjuntos de datos completos y listos para su uso en el entrenamiento y la validación.
 
 ## 4. Aumento de Datos
 
-Para enriquecer y mejorar la capacidad de generalización de nuestro modelo, aplicamos técnicas de aumento de datos utilizando la biblioteca `ImageDataGenerator` de Keras. Este generador nos permite aplicar una serie de transformaciones a nuestras imágenes de entrenamiento, como rotaciones, zoom, cambios de tamaño, entre otras. Al ajustar el generador a los datos de entrenamiento con `datagen.fit(x_train)`, aseguramos que estas transformaciones se apliquen de manera coherente y efectiva durante el entrenamiento del modelo. Esta estrategia de aumento de datos es fundamental para mejorar la capacidad del modelo para reconocer patrones en los datos de manera más robusta.
-
-### Ajustar el generador a los datos de entrenamiento
-
-x_train = np.expand_dims(x_train, axis=-1)
-x_val = np.expand_dims(x_val, axis=-1)
-datagen.fit(x_train)
+Para enriquecer y mejorar la capacidad de generalización de nuestro modelo, aplicamos técnicas de aumento de datos utilizando la biblioteca `ImageDataGenerator` de Keras. Este generador nos permite aplicar una serie de transformaciones a nuestras imágenes de entrenamiento, como rotaciones, zoom, cambios de tamaño, entre otras. Al ajustar el generador a los datos de entrenamiento con `datagen.fit()`, aseguramos que estas transformaciones se apliquen de manera coherente y efectiva durante el entrenamiento del modelo. Esta estrategia de aumento de datos es fundamental para mejorar la capacidad del modelo para reconocer patrones en los datos de manera más robusta.
 
 ## 5. Creación del Modelo
 
@@ -109,6 +120,14 @@ En esta etapa, creamos un modelo de red neuronal convolucional (CNN) utilizando 
 - **Capa de Salida con Activación Sigmoide**: La capa de salida utiliza una función de activación sigmoide, que es común en problemas de clasificación binaria, como la detección de neumonía.
 
 La definición detallada de estas capas se encuentra en el código. Además, en esta etapa, también cargamos y preprocesamos los datos de prueba que se utilizarán para evaluar el rendimiento del modelo. Esto nos permitirá medir la precisión y la pérdida del modelo en datos no vistos.
+
+### ENTRENAR MODELO
+
+para entrenar el modelo
+
+```shell
+python -m src.app train
+```
 
 ## 6. Evaluación del Modelo
 
@@ -143,6 +162,14 @@ Para una representación visual de la matriz de confusión, creamos un mapa de c
 En el mapa de calor, las etiquetas "Normal" y "Neumonía" se encuentran en los ejes x e y, y los valores dentro de las celdas indican cuántas imágenes fueron clasificadas correctamente o incorrectamente.
 
 Este análisis de matriz de confusión nos proporciona información importante sobre cómo el modelo está realizando la clasificación en los datos de prueba, lo que es esencial para evaluar su efectividad en la detección de neumonía en imágenes de radiografías de tórax.
+
+### PROBAR MODELO
+
+para probar el modelo
+
+```shell
+python -m src.app diagnose
+```
 
 ## Conclusión
 
