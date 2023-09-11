@@ -88,7 +88,7 @@ Una vez cargados los datos, se lleva a cabo una etapa crucial de preprocesamient
 
 Para enriquecer y mejorar la capacidad de generalización de nuestro modelo, aplicamos técnicas de aumento de datos utilizando la biblioteca `ImageDataGenerator` de Keras. Este generador nos permite aplicar una serie de transformaciones a nuestras imágenes de entrenamiento, como rotaciones, zoom, cambios de tamaño, entre otras. Al ajustar el generador a los datos de entrenamiento con `datagen.fit(x_train)`, aseguramos que estas transformaciones se apliquen de manera coherente y efectiva durante el entrenamiento del modelo. Esta estrategia de aumento de datos es fundamental para mejorar la capacidad del modelo para reconocer patrones en los datos de manera más robusta.
 
-# Ajustar el generador a los datos de entrenamiento
+### Ajustar el generador a los datos de entrenamiento
 
 x_train = np.expand_dims(x_train, axis=-1)
 x_val = np.expand_dims(x_val, axis=-1)
@@ -118,7 +118,7 @@ En esta etapa, evaluamos el rendimiento de nuestro modelo utilizando datos de pr
 
 Visualizar la Perdida y Precisión del modelo de entrenamiento ![Entrenamiento de Datos Metricas](assets/images/accuracy.png)
 
-# Evaluación del Modelo y Matriz de Confusión
+## Evaluación del Modelo y Matriz de Confusión
 
 En esta sección, exploramos la evaluación del modelo y la matriz de confusión después de su entrenamiento. Estos son los pasos clave que llevamos a cabo:
 
