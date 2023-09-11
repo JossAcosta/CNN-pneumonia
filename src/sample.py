@@ -3,6 +3,7 @@ import os
 import numpy as np
 from .store import load_image, process_image, list_directory
 
+
 class Sample:
     def __init__(self, name: str = "test"):
         self.sample_name = name
@@ -23,21 +24,22 @@ class Sample:
         self.pneumo_tags = tags
 
     def load_normal_sample(self, sample_name: str = "test"):
-        images, tags = self.load_training_from_raw_images(
+        images, tags = self.load_from_raw_images(
             f"chest-xray/{sample_name}/normal"
         )
         return images, tags
 
     def load_pneumo_sample(self, sample_name: str = "test"):
-        images, tags = self.load_training_from_raw_images(
+        images, tags = self.load_from_raw_images(
             f"chest-xray/{sample_name}/pneumonia", training_tag=1
         )
         return images, tags
 
-    def load_training_from_raw_images(self, sample_path: str, training_tag: int = 0):
+    def load_from_raw_images(self, sample_path: str, training_tag: int = 0):
         sample = list_directory(sample_path)
         sample_count = len(sample)
-        tags = np.zeros(sample_count) if training_tag == 0 else np.ones(sample_count)
+        tags = np.zeros(sample_count) if training_tag == 0 else np.ones(
+            sample_count)
         image_buffer = []
         for file_name in sample:
             image_path = os.path.join(sample_path, file_name)
